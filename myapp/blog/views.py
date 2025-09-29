@@ -24,15 +24,16 @@ def detail(request, slug):
      # post = next((item for item in posts if item['id']== int(post_id)),None)
     try:
         # getting data from model by post id
-        post1 = post.objects.get(slug = slug) 
+        post1 = post.objects.get(slug = slug)
+        related_posts = post.objects.filter(Category = post1.Category).exclude(pk = post1.id)
 
     except post.DoesNotExist:
         raise Http404("post doesn't exit!")
 
         #  logger = logging.getLogger("TESTING")
         #  logger.debug(f'post variables is {post} ')
-
-    return render(request, "blog/detail.html",{'post': post1})
+ 
+    return render(request, "blog/detail.html",{'post': post1, 'related_posts': related_posts})
 
 def old_url_redirect(request):
     return redirect(reverse("blog:new_page_url"))

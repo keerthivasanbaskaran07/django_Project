@@ -13,7 +13,7 @@ class Command(BaseCommand):
         #Delete Existing data :
         Category.objects.all().delete()
 
-        categories = [ 'Sports','Technoly','Science','Art','Food']
+        categories = [ 'Sports','Technology','Science','Art','Food']
 
 
         for category_name in categories :
