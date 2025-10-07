@@ -28,3 +28,8 @@ class post(models.Model):
     def __str__(self):
         return self.title
     
+
+
+class AboutUs(models.Model):
+    content = models.TextField()
+    
