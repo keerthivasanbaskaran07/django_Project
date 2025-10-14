@@ -51,6 +51,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.RedirectAuthenticatedUserMiddleware',
+    'myapp.middleware.RestrictUnauthenticatedUserMiddleWare',
+    
 ]
 
 ROOT_URLCONF = 'myapp.urls'
@@ -125,6 +128,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "blog/static/blog"
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -145,3 +152,11 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+DEFAULT_FROM_EMAIL = 'your_email@jvlcode.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER ='a1b4f77882d6af'
+EMAIL_HOST_PASSWORD ='cfa26c9b684e53'

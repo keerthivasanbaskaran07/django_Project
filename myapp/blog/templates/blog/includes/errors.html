@@ -1,0 +1,32 @@
+<!-- field error -->
+{% for field in form %}
+  {% if field.errors %}
+    <div class="col-12">
+      <span class="fw-bold">{{ field.label_tag }}</span>
+      {% for error in field.errors %}
+        {% comment %} <span class="text-danger">{{ error }}</span> {% endcomment %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}
+
+
+<!-- non -files error -->
+{% for error in form.non_field_errors %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>{{ error }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+
+<!-- success message -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %} alert-success {% else %} alert-danger {% endif %} alert-dismissible fade show" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+

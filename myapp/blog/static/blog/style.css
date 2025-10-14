@@ -1,3 +1,4 @@
-body {
-    background-color: #663399;
+body{
+    background-image: linear-gradient(90deg,  rgb(3, 13, 24) 0%, rgb(14, 74, 132) 41%, rgb(11, 93, 165) 50%,  rgb(14, 74, 132) 61%,  rgb(3, 13, 24) 100%) !important;
+    color: white;
 }
