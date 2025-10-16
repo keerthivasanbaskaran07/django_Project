@@ -2,9 +2,9 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse ,Http404
 from django.urls import reverse
 import logging 
-from .models import post, AboutUs
+from .models import Category, post, AboutUs
 from django.core.paginator import Paginator
-from .forms import ForgotPasswordForm, LoginForm, ResetPasswordForm, contactForm,RegisterForm
+from .forms import ForgotPasswordForm, LoginForm, PostForm, ResetPasswordForm, contactForm,RegisterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
@@ -118,7 +118,15 @@ def login(request):
 
 def dashboard(request):
     blog_title = "MY Posts"
-    return render(request, "blog/dashboard.html",{'blog_title':blog_title})
+    #getting user posts data
+    all_posts = post.objects.filter(user=request.user)
+
+    #paginator
+    paginator1 = Paginator(all_posts, 5)
+    page_number = request.GET.get("page")
+    page_object = paginator1.get_page(page_number)
+
+    return render(request, "blog/dashboard.html",{'blog_title':blog_title, 'page_obj':page_object})
 
 def logout(request):
     auth_logout(request)
@@ -173,3 +181,17 @@ def reset_password(request, uidb64, token):
                
        
     return render(request, "blog/reset_password.html",{'form':form})
+
+def new_post(request):
+    form = PostForm()
+    categories = Category.objects.all()
+    if request.method == 'POST':
+        #form
+        form = PostForm(request.POST , request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+            return redirect('blog:dashboard')
+        
+    return render(request, "blog/new_post.html",{'categories':categories, 'form':form})

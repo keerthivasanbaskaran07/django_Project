@@ -5,7 +5,7 @@ from .models import post,Category,AboutUs
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title','content') # only displaying content
     search_fields = ('title','content') # its searching the content and text
-    list_filter = ('Category', 'created_at') # add filter column 
+    list_filter = ('category', 'created_at') # add filter column 
 
 
 # Register your models here.

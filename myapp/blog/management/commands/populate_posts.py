@@ -89,7 +89,7 @@ class Command(BaseCommand):
         categories = Category.objects.all()
         for title, content, img_url in zip(titles, contents, img_urls):
             category = random.choice(categories)
-            post.objects.create(title=title, content=content, img_url=img_url, Category = category)
+            post.objects.create(title=title, content=content, img_url=img_url, category = category)
 
         self.stdout.write(self.style.SUCCESS("Completed inserting data!!"))
 
