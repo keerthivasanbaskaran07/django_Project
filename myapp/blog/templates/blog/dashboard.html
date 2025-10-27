@@ -18,7 +18,7 @@
         </div>
         <div class="row d-flex justify-content-center">
           <div class="col-6">
-              [ERRORS]
+              {% include 'blog/includes/errors.html' %}
           </div>
         </div>
         <div class="row">
@@ -35,15 +35,22 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-4">
-                  <img style="height:300;, width:300;" src="{{ post.img_url }}" class="img-fluid" alt="..." />
+                  <img style="height:300;, width:300;" src="{{ post.formatted_img_url }}" class="img-fluid" alt="..." />
                 </div>
                 <div class="col-md-8">
                   <h5 class="card-title">{{ post.title }}</h5>
                   <p class="card-text">{{ post.content|truncatechars:50 }}</p>
                   <div class="d-flex justify-content-between">
                     <a href="{% url 'blog:detail' slug=post.slug %}">Read More</a>
-                    <a class="text-decoration-none text-dark fw-bold" href="#">{{ post.Category.name }}</a>
+                    <a class="text-decoration-none text-dark fw-bold" href="#">{{ post.category.name }}</a>
                   </div>
+
+                  <div class="d-flex justify-content-between mt-2">
+                    <a class="btn btn-warning btn-sm" href="{% url 'blog:edit_post' post_id=post.id %}">Edit Post</a>
+                    <button class="btn btn-danger btn-sm" onclick="confirmBeforeDelete(`{% url 'blog:delete_post' post_id=post.id %}`)">Edit Post</button>
+                
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -83,6 +90,20 @@
     {% endif %}
         </div>
     </div>
+
+    <script>
+      function confirmBeforeDelete(url){
+        var userConfirmed = confirm("are sure want to delete this? ")
+
+        if (userConfirmed) {
+          window.location.href = url
+        }
+
+      }
+
+
+
+    </script>
 {% endblock %}
       
  

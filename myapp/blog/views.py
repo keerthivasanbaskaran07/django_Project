@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.http import HttpResponse ,Http404
 from django.urls import reverse
 import logging 
@@ -42,7 +42,7 @@ def detail(request, slug):
     try:
         # getting data from model by post id
         post1 = post.objects.get(slug = slug)
-        related_posts = post.objects.filter(Category = post1.Category).exclude(pk = post1.id)
+        related_posts = post.objects.filter(category = post1.category).exclude(pk = post1.id)
 
     except post.DoesNotExist:
         raise Http404("post doesn't exit!")
@@ -195,3 +195,24 @@ def new_post(request):
             return redirect('blog:dashboard')
         
     return render(request, "blog/new_post.html",{'categories':categories, 'form':form})
+
+
+def edit_post(request, post_id):
+    form = PostForm()
+    categories = Category.objects.all()
+    Post = get_object_or_404(post , id=post_id)
+    if request.method =='POST':
+        #form
+        form = PostForm(request.POST , request.FILES, instance=Post)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Post updated successfuly')
+            return redirect('blog:dashboard')
+
+    return render(request, "blog/edit_post.html" ,{'categories':categories , 'post':Post , 'form':form})
+
+def delete_post(request, post_id):
+    Post = get_object_or_404(post ,id=post_id)
+    Post.delete()
+    messages.success(request,'Post deleted successfuly')
+    return redirect('blog:dashboard')

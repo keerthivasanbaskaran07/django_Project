@@ -28,6 +28,14 @@ class post(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+
+    @property # dectrator
+    def formatted_img_url(self):
+        url = self.img_url if self.img_url.__str__().startswith(('http://','https://'))  else self.img_url.url
+        return url
+    
+
+
     def __str__(self):
         return self.title
     
