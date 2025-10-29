@@ -14,6 +14,7 @@ def create_group_permissions(sender, **kwargs):
         ]
 
         authors_permissions = [
+            Permission.objects.get(codename = "view_post"),
             Permission.objects.get(codename = "add_post"),
             Permission.objects.get(codename = "change_post"),
             Permission.objects.get(codename = "delete_post"),
@@ -23,6 +24,7 @@ def create_group_permissions(sender, **kwargs):
         can_published,created = Permission.objects.get_or_create(codename = "can_publish",content_type_id = 9, name="can publish post")
         editors_permissions = [
             can_published,
+            Permission.objects.get(codename = "view_post"),
             Permission.objects.get(codename = "add_post"),
             Permission.objects.get(codename = "change_post"),
             Permission.objects.get(codename = "delete_post"),
