@@ -14,7 +14,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.models import Group
 # Static demo data
 # posts = [
@@ -193,6 +193,7 @@ def reset_password(request, uidb64, token):
     return render(request, "blog/reset_password.html",{'form':form})
 
 @login_required
+@permission_required('blog.add_post' , raise_exception=True)
 def new_post(request):
     form = PostForm()
     categories = Category.objects.all()
@@ -208,6 +209,7 @@ def new_post(request):
     return render(request, "blog/new_post.html",{'categories':categories, 'form':form})
 
 @login_required
+@permission_required('blog.change_post' ,raise_exception=True)
 def edit_post(request, post_id):
     form = PostForm()
     categories = Category.objects.all()
@@ -222,12 +224,14 @@ def edit_post(request, post_id):
 
     return render(request, "blog/edit_post.html" ,{'categories':categories , 'post':Post , 'form':form})
 @login_required
+@permission_required('blog.delete_post' ,raise_exception=True)
 def delete_post(request, post_id):
     Post = get_object_or_404(post ,id=post_id)
     Post.delete()
     messages.success(request,'Post deleted successfuly')
     return redirect('blog:dashboard')
 @login_required
+@permission_required('blog.can_publish' ,raise_exception=True)
 def publish_post(request, post_id):
     Post = get_object_or_404(post ,id=post_id)
     Post.is_published = True
