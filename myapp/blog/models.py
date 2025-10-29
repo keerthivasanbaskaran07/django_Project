@@ -21,7 +21,7 @@ class post(models.Model):
     slug = models.SlugField(unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    
+    is_published = models.BooleanField(default=False)
 
 
     def save(self, *args, **kwargs):

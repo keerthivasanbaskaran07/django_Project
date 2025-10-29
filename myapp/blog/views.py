@@ -14,6 +14,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 # Static demo data
 # posts = [
 #         {'id':1,'title':'Post 1', 'content':'content of Post 1'},
@@ -27,7 +29,7 @@ def index(request):
     blog_title ="Latest Posts"
     # getting data from post model
 
-    all_posts = post.objects.all()
+    all_posts = post.objects.filter(is_published = True)
 
     #paginator
     paginator1 = Paginator(all_posts, 5)
@@ -37,6 +39,11 @@ def index(request):
     return render(request, "blog/index.html",{'blog_title': blog_title, 'page_obj': page_object})
 
 def detail(request, slug):
+    if request.user and not request.user.has_perm('blog.view_post'):
+        # if user logged in and user don't have permission on view_post its redirect
+        messages.error(request, 'You dont have a permmission to view any post')
+        return redirect('blog:index')
+
      #static data
      # post = next((item for item in posts if item['id']== int(post_id)),None)
     try:
@@ -92,6 +99,9 @@ def register(request):
             user = form.save(commit=False) # user data created
             user.set_password(form.cleaned_data['password'])
             user.save()
+            #add user to readers groups
+            readers_group,created = Group.objects.get_or_create(name="Readers")
+            user.groups.add(readers_group)
             messages.success(request,'registration successfull, you can log in ')
             return redirect('blog:login')
             
@@ -182,6 +192,7 @@ def reset_password(request, uidb64, token):
        
     return render(request, "blog/reset_password.html",{'form':form})
 
+@login_required
 def new_post(request):
     form = PostForm()
     categories = Category.objects.all()
@@ -196,7 +207,7 @@ def new_post(request):
         
     return render(request, "blog/new_post.html",{'categories':categories, 'form':form})
 
-
+@login_required
 def edit_post(request, post_id):
     form = PostForm()
     categories = Category.objects.all()
@@ -210,9 +221,16 @@ def edit_post(request, post_id):
             return redirect('blog:dashboard')
 
     return render(request, "blog/edit_post.html" ,{'categories':categories , 'post':Post , 'form':form})
-
+@login_required
 def delete_post(request, post_id):
     Post = get_object_or_404(post ,id=post_id)
     Post.delete()
     messages.success(request,'Post deleted successfuly')
+    return redirect('blog:dashboard')
+@login_required
+def publish_post(request, post_id):
+    Post = get_object_or_404(post ,id=post_id)
+    Post.is_published = True
+    Post.save()
+    messages.success(request,'Post published successfuly')
     return redirect('blog:dashboard')

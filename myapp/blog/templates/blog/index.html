@@ -14,6 +14,7 @@
     </div>
   </div>
   <div class="row m-3">
+    {% include 'blog/includes/errors.html' %} 
     {% if page_obj %}
       {% for post in page_obj %}
         <div class="col-4 mb-4">

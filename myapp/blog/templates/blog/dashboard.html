@@ -10,8 +10,11 @@
               <div>
                   <h2>Your Groups:</h2>
                   <ul>
-                      <li>[GROUP NAME]</li>
+                    {% for group in user.groups.all %}
+                      <li>{{group.name}}</li>
+                    {% empty %}
                       <li>You are not a member of any groups.</li>
+                    {% endfor%}
                   </ul>
               </div>
           </div>
@@ -47,8 +50,10 @@
 
                   <div class="d-flex justify-content-between mt-2">
                     <a class="btn btn-warning btn-sm" href="{% url 'blog:edit_post' post_id=post.id %}">Edit Post</a>
-                    <button class="btn btn-danger btn-sm" onclick="confirmBeforeDelete(`{% url 'blog:delete_post' post_id=post.id %}`)">Edit Post</button>
-                
+                    <button class="btn btn-danger btn-sm" onclick="confirmBeforeDelete(`{% url 'blog:delete_post' post_id=post.id %}`)">delete Post</button>
+                    {% if not post.is_published %}
+                    <a href="{% url 'blog:publish_post' post_id=post.id %}" class="btn btn-success btn-sm">Publish </a>
+                    {% endif %}
                   </div>
 
                 </div>
